@@ -688,10 +688,10 @@ logger.info(`Entity models ${colors.bold(Object.keys(sequelize.models).length.to
 /* Serve metrics */
 let metricsUpdateLoop: any
 const Metrics = metrics.observeMetrics() // vuln-code-snippet neutral-line exposedMetricsChallenge
-app.get('/metrics', metrics.serveMetrics()) // vuln-code-snippet vuln-line exposedMetricsChallenge
+app.get('/metrics', security.isAuthorized(), metrics.serveMetrics()) // vuln-code-snippet vuln-line exposedMetricsChallenge
 errorhandler.title = `${config.get<string>('application.name')} (Express ${utils.version('express')})`
 
-export async function start (readyCallback?: () => void) {
+export async function start (readyCallback: any) {
   const datacreatorEnd = startupGauge.startTimer({ task: 'datacreator' })
   await sequelize.sync({ force: true })
   await datacreator()
